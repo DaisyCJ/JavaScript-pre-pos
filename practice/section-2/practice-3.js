@@ -1,7 +1,29 @@
 'use strict';
 
 function countSameElements(collection) {
-  var arr = [];
+  return collection.map((ele) => GetElemAndCount(ele))
+    .reduce((arr,newArr) => {
+    var elem = arr.find((e) => e.name===newArr.name);
+    if(elem){
+      elem.summary += newArr.summary;
+    }
+    else{
+      arr.push({name:newArr.name, summary:newArr.summary});
+    }
+    return arr;
+    },[])
+}
+
+function GetElemAndCount(arr) {
+  if(arr.length ===1){
+    return {name: arr, summary: 1};
+  }
+  var RegExGroup = [/(\w)\[(\d+)\]/,/(\w)-(\d)/, /(\w):(\d)+/];
+  var whichRegEx = RegExGroup.find((e) => arr.match(e));
+  var elem = arr.match(whichRegEx);
+  return {name: elem[1], summary: parseInt(elem[2])};
+}
+  /*  var arr = [];
   for(var i of collection) {
     if(i.length===1){//判断是否为单纯的字符
       if (ifHas(arr, i)) {//判断是否存在这个数，如果存在就count++
@@ -52,3 +74,4 @@ function ifHas(arr,a){//判断
   })
   return m;
 }
+*/
